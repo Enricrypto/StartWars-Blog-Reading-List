@@ -8,8 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
-#from models import Person
+from models import db, User, People, Planet
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -36,16 +35,75 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
-def handle_hello():
+# ENDPOINTS
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
+# USER 
+@app.route('/users', methods=['GET'])
+def get_all_users(): 
+    all_users = User.query.all()
+    serialize_all_users = list(map(lambda user: user.serialize(), all_users))
+    return jsonify(serialize_all_users), 200
 
-    return jsonify(response_body), 200
+@app.route('/users/favorites', methods = ['GET'])
+def get_user_favorites():
+    user_favorites = User.favorites.query.get()
+    return jsonify(user_favorites.serialize()), 200
 
-# this only runs if `$ python src/app.py` is executed
+#PEOPLE
+@app.route('/people', methods=['GET'])
+def get_all_people():
+    all_people= People.query.all() 
+    serialize_all_people = [people.serialize() for people in all_people] 
+    return jsonify(serialize_all_people), 200
+
+@app.route('/people/<int:id>', methods=['GET'])
+def get_people(id):
+    people = People.query.get(id)
+    return jsonify(people.serialize()), 200
+
+@app.route('/people', methods=['POST'])
+def create_people():
+    data = request.get_json()
+    new_people = People(data['people_name'], data['description'], data['eye_color'])
+    db.session.add(new_people)
+    db.session.commit()
+    return jsonify(new_people.serialize()), 200
+
+@app.route('/people/<int:id>', methods=['DELETE'])
+def delete_people(id):
+    del_people = People.query.get(id)
+    db.session.delete(del_people)
+    db.session.commit()
+    return jsonify(del_people.serialize()), 200
+
+#PLANETS
+@app.route('/planet', methods=['GET'])
+def get_all_planets():
+    all_planets = Planet.query.all() 
+    serialize_all_planets = [planet.seralize() for planet in all_planets]
+    return jsonify(serialize_all_planets), 200
+
+@app.route('/planet/<int:id>', methods=['GET'])
+def get_planet(id):
+    planet = Planet.query.get(id)
+    return jsonify(planet.serialize()), 200
+
+@app.route('/planet', methods=['POST'])
+def create_planet():
+    data = request.get_json()
+    new_planet = Planet(data['color'], data['climate'], data['longitude'])
+    db.session.add(new_planet)
+    db.session.commit()
+    return jsonify(new_planet.serialize()), 200
+
+@app.route('/planet/<int:id>', methods=['DELETE'])
+def delete_planet(id):
+    del_planet = People.query.get(id)
+    db.session.delete(del_planet)
+    db.session.commit()
+    return jsonify(del_planet.serialize()), 200
+
+
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
