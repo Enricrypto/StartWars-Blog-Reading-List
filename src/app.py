@@ -8,7 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, People, Planet
+from models.index import db, User
+from domain.user.route import user_route
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -35,25 +36,36 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-# ENDPOINTS
+
+user = user_route(app)
+
+
 
 # USER 
-@app.route('/users', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def get_all_users(): 
     all_users = User.query.all()
     serialize_all_users = list(map(lambda user: user.serialize(), all_users))
     return jsonify(serialize_all_users), 200
 
-@app.route('/users/favorites', methods = ['GET'])
-def get_user_favorites():
-    user_favorites = User.favorites.query.get()
-    return jsonify(user_favorites.serialize()), 200
+@app.route('/user', methods=['POST'])
+def create_user(): 
+    data = request.get_json()
+    new_user = User(data['email'], data['username'], data['password'], data['is_active'])
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(new_user.serialize()), 200
+
+# @app.route('/user/favorites', methods = ['GET'])
+# def get_user_favorites():
+#     user_favorites = User.favorites.query.get()
+#     return jsonify(user_favorites.serialize()), 200
 
 #PEOPLE
 @app.route('/people', methods=['GET'])
 def get_all_people():
-    all_people= People.query.all() 
-    serialize_all_people = [people.serialize() for people in all_people] 
+    all_people = People.query.all() 
+    serialize_all_people = list(map(lambda people: people.serialize(), all_people))
     return jsonify(serialize_all_people), 200
 
 @app.route('/people/<int:id>', methods=['GET'])
@@ -80,7 +92,7 @@ def delete_people(id):
 @app.route('/planet', methods=['GET'])
 def get_all_planets():
     all_planets = Planet.query.all() 
-    serialize_all_planets = [planet.seralize() for planet in all_planets]
+    serialize_all_planets = [planet.serialize() for planet in all_planets]
     return jsonify(serialize_all_planets), 200
 
 @app.route('/planet/<int:id>', methods=['GET'])
@@ -102,6 +114,32 @@ def delete_planet(id):
     db.session.delete(del_planet)
     db.session.commit()
     return jsonify(del_planet.serialize()), 200
+
+#FAVORITE
+@app.route('/user/<int:user_id>/favorite/people', methods=['POST'])
+def add_favorite_people(user_id):
+    #obtener los datos del favorito
+    people_id = request.json.get('people_id', None)
+    #buscar el usuario en mi base de datos
+    user = User.query.get(user_id)
+    if user is None: 
+        return jsonify({'msg' : 'el usuario no existe'}), 401
+    favorite = Favorite(user_id = user_id, people_id = people_id)
+    db.session.add(favorite)
+    db.session.commit()
+    #obtener la lista actualizada de los favoritos del usuario
+    user_favorite = Favorite.query.filter_by(user_id = user_id).all()
+    all_user_favorites = [element.serialize() for element in user_favorite]
+    print(all_user_favorites)
+    response_body = {'msg' : 'favorito agregado', 'favoritos' : all_user_favorites}
+    return jsonify(response_body), 200
+
+# @app.route('/favorite/people/<int:id>', methods=['POST'])
+# def create_favorite_people(id):
+#     data = request.get_json()
+#     new_favorite_people = Favorite(data['people_id'])
+#     return jsonify(new_favorite_people.serialize()), 200
+
 
 
 if __name__ == '__main__':
