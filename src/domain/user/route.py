@@ -6,5 +6,14 @@ def user_route(app):
 
     @app.route('/user', methods=['POST'])
     def create_user():
-        body = request.get_json()
-        return Controller.create_user(body)
+        data = request.get_json()
+        return Controller.create_user(data)
+
+    @app.route('/user', methods=['GET'])
+    def get_all_users(): 
+        return Controller.get_all_users()
+
+    # @app.route('/user/favorites', methods = ['GET'])
+    # def get_user_favorites():
+    #     user_favorites = User.favorites.query.get()
+    #     return jsonify(user_favorites.serialize()), 200

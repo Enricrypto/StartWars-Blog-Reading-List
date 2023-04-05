@@ -10,6 +10,7 @@ from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models.index import db, User
 from domain.user.route import user_route
+from domain.planet.route import planet_route
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -38,28 +39,8 @@ def sitemap():
 
 
 user = user_route(app)
+planet = planet_route(app)
 
-
-
-# USER 
-@app.route('/user', methods=['GET'])
-def get_all_users(): 
-    all_users = User.query.all()
-    serialize_all_users = list(map(lambda user: user.serialize(), all_users))
-    return jsonify(serialize_all_users), 200
-
-@app.route('/user', methods=['POST'])
-def create_user(): 
-    data = request.get_json()
-    new_user = User(data['email'], data['username'], data['password'], data['is_active'])
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify(new_user.serialize()), 200
-
-# @app.route('/user/favorites', methods = ['GET'])
-# def get_user_favorites():
-#     user_favorites = User.favorites.query.get()
-#     return jsonify(user_favorites.serialize()), 200
 
 #PEOPLE
 @app.route('/people', methods=['GET'])
@@ -89,31 +70,31 @@ def delete_people(id):
     return jsonify(del_people.serialize()), 200
 
 #PLANETS
-@app.route('/planet', methods=['GET'])
-def get_all_planets():
-    all_planets = Planet.query.all() 
-    serialize_all_planets = [planet.serialize() for planet in all_planets]
-    return jsonify(serialize_all_planets), 200
+# @app.route('/planet', methods=['GET'])
+# def get_all_planets():
+#     all_planets = Planet.query.all() 
+#     serialize_all_planets = [planet.serialize() for planet in all_planets]
+#     return jsonify(serialize_all_planets), 200
 
-@app.route('/planet/<int:id>', methods=['GET'])
-def get_planet(id):
-    planet = Planet.query.get(id)
-    return jsonify(planet.serialize()), 200
+# @app.route('/planet/<int:id>', methods=['GET'])
+# def get_planet(id):
+#     planet = Planet.query.get(id)
+#     return jsonify(planet.serialize()), 200
 
-@app.route('/planet', methods=['POST'])
-def create_planet():
-    data = request.get_json()
-    new_planet = Planet(data['color'], data['climate'], data['longitude'])
-    db.session.add(new_planet)
-    db.session.commit()
-    return jsonify(new_planet.serialize()), 200
+# @app.route('/planet', methods=['POST'])
+# def create_planet():
+#     data = request.get_json()
+#     new_planet = Planet(data['color'], data['climate'], data['longitude'])
+#     db.session.add(new_planet)
+#     db.session.commit()
+#     return jsonify(new_planet.serialize()), 200
 
-@app.route('/planet/<int:id>', methods=['DELETE'])
-def delete_planet(id):
-    del_planet = People.query.get(id)
-    db.session.delete(del_planet)
-    db.session.commit()
-    return jsonify(del_planet.serialize()), 200
+# @app.route('/planet/<int:id>', methods=['DELETE'])
+# def delete_planet(id):
+#     del_planet = People.query.get(id)
+#     db.session.delete(del_planet)
+#     db.session.commit()
+#     return jsonify(del_planet.serialize()), 200
 
 #FAVORITE
 @app.route('/user/<int:user_id>/favorite/people', methods=['POST'])
