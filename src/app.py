@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models.index import db, User
+from models.index import db, User, Planet, People, Favorite
 from domain.user.route import user_route
 from domain.planet.route import planet_route
 

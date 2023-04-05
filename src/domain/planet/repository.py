@@ -1,10 +1,11 @@
 from models.index import db, Planet
 
-
+# @app.route('/planet', methods=['GET'])
 def get_all_planets():
     all_planets = Planet.query.all() 
     serialize_all_planets = [planet.serialize() for planet in all_planets]
     return serialize_all_planets
+    # jsonify(serialize_all_planets), 200
 
 # @app.route('/planet/<int:id>', methods=['GET'])
 # def get_planet(id):

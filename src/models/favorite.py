@@ -9,9 +9,8 @@ class Favorite(db.Model):
     planet = db.relationship("Planet", back_populates = "favorite")
     people = db.relationship("People", back_populates = "favorite")
    
-    def __init__(self, user_id, people_id, planet_id, id):
+    def __init__(self, people_id, planet_id, id, user_id):
         self.id = id, 
-        self.user_id = user_id
         self.people_id = people_id
         self.planet_id = planet_id
 
@@ -21,7 +20,7 @@ class Favorite(db.Model):
             "user_id": self.user_id,
             "people_id": self.people_id, 
             "planet_id": self.planet_id,
-            "user":  self.user.serialize_populate(),
+            "user":  self.user.serialize(),
             "planet": self.planet.serialize_populate(),
             "people": self.people.serialize_populate()
         }
