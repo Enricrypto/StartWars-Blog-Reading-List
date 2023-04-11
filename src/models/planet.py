@@ -5,7 +5,7 @@ class Planet(db.Model):
     color = db.Column(db.String(250))
     climate = db.Column(db.String(250))
     longitude =db.Column(db.String(250))
-    favorite = db.relationship("Favorite")
+    favorite = db.relationship("Favorite", back_populates='planet')
 
     def __init__(self, color, climate, longitude):
         self.color = color
@@ -14,6 +14,7 @@ class Planet(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "color": self.color,
             "climate": self.climate, 
             "longitude": self.longitude

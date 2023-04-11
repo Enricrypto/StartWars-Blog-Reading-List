@@ -8,7 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(150), unique= True, nullable=False)
     favorite = db.relationship("Favorite", back_populates='user')
 
-    def __init__(self, email, username, is_active, password):
+    def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password = password
@@ -19,9 +19,9 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "username": self.username, 
+            "username": self.username,  
             "active": self.is_active,
-            # "favorite": list(map(lambda  favorite: favorite.serialize_populate(), self.favorite))
+            "favorite": list(map(lambda favorite: favorite.serialize_populate(), self.favorite))
         }
     
     def serialize_populate(self):

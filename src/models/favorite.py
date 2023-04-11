@@ -9,26 +9,31 @@ class Favorite(db.Model):
     planet = db.relationship("Planet", back_populates = "favorite")
     people = db.relationship("People", back_populates = "favorite")
    
-    def __init__(self, people_id, planet_id, id, user_id):
-        self.id = id, 
+    def __init__(self, people_id, planet_id, user_id):
         self.people_id = people_id
         self.planet_id = planet_id
+        self.user_id = user_id
 
-    def serialize(self):
+    def serialize_people(self):
         return {
             "id": self.id, 
             "user_id": self.user_id,
             "people_id": self.people_id, 
-            "planet_id": self.planet_id,
             "user":  self.user.serialize(),
-            "planet": self.planet.serialize_populate(),
-            "people": self.people.serialize_populate()
+            "people": list(map(lambda people: people.serialize_populate(), self.people))
+        }
+    
+    def serialize_planet(self):
+        return {
+            "id": self.id, 
+            "user_id": self.user_id,
+            "planet_id": self.planet_id, 
+            "user":  self.user.serialize(),
+            "planet": self.planet.serialize_populate() if self.planet else None
         }
     
     def serialize_populate(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "people_id": self.people_id, 
-            "planet_id": self.planet_id,
+            "user_id": self.user_id
         }

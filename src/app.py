@@ -11,6 +11,8 @@ from admin import setup_admin
 from models.index import db, User, Planet, People, Favorite
 from domain.user.route import user_route
 from domain.planet.route import planet_route
+from domain.people.route import people_route
+from domain.favorite.route import favorite_route
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -40,54 +42,18 @@ def sitemap():
 
 user = user_route(app)
 planet = planet_route(app)
+people = people_route(app)
+favorite = favorite_route(app)
 
 
-#PEOPLE
-@app.route('/people', methods=['GET'])
-def get_all_people():
-    all_people = People.query.all() 
-    serialize_all_people = list(map(lambda people: people.serialize(), all_people))
-    return jsonify(serialize_all_people), 200
 
-@app.route('/people/<int:id>', methods=['GET'])
-def get_people(id):
-    people = People.query.get(id)
-    return jsonify(people.serialize()), 200
-
-@app.route('/people', methods=['POST'])
-def create_people():
-    data = request.get_json()
-    new_people = People(data['people_name'], data['description'], data['eye_color'])
-    db.session.add(new_people)
-    db.session.commit()
-    return jsonify(new_people.serialize()), 200
-
-@app.route('/people/<int:id>', methods=['DELETE'])
-def delete_people(id):
-    del_people = People.query.get(id)
-    db.session.delete(del_people)
-    db.session.commit()
-    return jsonify(del_people.serialize()), 200
-
-#PLANETS
-# @app.route('/planet', methods=['GET'])
-# def get_all_planets():
-#     all_planets = Planet.query.all() 
-#     serialize_all_planets = [planet.serialize() for planet in all_planets]
-#     return jsonify(serialize_all_planets), 200
-
-# @app.route('/planet/<int:id>', methods=['GET'])
-# def get_planet(id):
-#     planet = Planet.query.get(id)
-#     return jsonify(planet.serialize()), 200
-
-# @app.route('/planet', methods=['POST'])
-# def create_planet():
-#     data = request.get_json()
-#     new_planet = Planet(data['color'], data['climate'], data['longitude'])
-#     db.session.add(new_planet)
+# @app.route('/people/<int:id>', methods=['DELETE'])
+# def delete_people(id):
+#     del_people = People.query.get(id)
+#     db.session.delete(del_people)
 #     db.session.commit()
-#     return jsonify(new_planet.serialize()), 200
+#     return jsonify(del_people.serialize()), 200
+
 
 # @app.route('/planet/<int:id>', methods=['DELETE'])
 # def delete_planet(id):
@@ -97,29 +63,7 @@ def delete_people(id):
 #     return jsonify(del_planet.serialize()), 200
 
 #FAVORITE
-@app.route('/user/<int:user_id>/favorite/people', methods=['POST'])
-def add_favorite_people(user_id):
-    #obtener los datos del favorito
-    people_id = request.json.get('people_id', None)
-    #buscar el usuario en mi base de datos
-    user = User.query.get(user_id)
-    if user is None: 
-        return jsonify({'msg' : 'el usuario no existe'}), 401
-    favorite = Favorite(user_id = user_id, people_id = people_id)
-    db.session.add(favorite)
-    db.session.commit()
-    #obtener la lista actualizada de los favoritos del usuario
-    user_favorite = Favorite.query.filter_by(user_id = user_id).all()
-    all_user_favorites = [element.serialize() for element in user_favorite]
-    print(all_user_favorites)
-    response_body = {'msg' : 'favorito agregado', 'favoritos' : all_user_favorites}
-    return jsonify(response_body), 200
 
-# @app.route('/favorite/people/<int:id>', methods=['POST'])
-# def create_favorite_people(id):
-#     data = request.get_json()
-#     new_favorite_people = Favorite(data['people_id'])
-#     return jsonify(new_favorite_people.serialize()), 200
 
 
 
