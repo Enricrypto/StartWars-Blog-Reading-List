@@ -1,5 +1,4 @@
 from flask import request, jsonify
-from models.index import db, Favorite
 import domain.favorite.controller as Controller 
 
 def favorite_route(app):
@@ -8,17 +7,10 @@ def favorite_route(app):
     def create_favorite(category):
         # bring all variables at once
         body = request.get_json() 
-        if category == 'planet':
-            new_favorite = Favorite (None, body['planet_id'], body['user_id'])
-            db.session.add(new_favorite)
-            db.session.commit()
-            return jsonify(new_favorite.serialize_populate()), 201
-        else: 
-            new_favorite = Favorite (body['people_id'], None, body['user_id'])
-            db.session.add(new_favorite)
-            db.session.commit()
-            return jsonify(new_favorite.serialize_populate()), 201
-
+        favorite = Controller.create_favorite(category, body)
+        print(favorite)
+        print(type(favorite))
+        return jsonify(favorite), 201
 
 
 

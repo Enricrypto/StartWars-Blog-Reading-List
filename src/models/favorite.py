@@ -20,7 +20,7 @@ class Favorite(db.Model):
             "user_id": self.user_id,
             "people_id": self.people_id, 
             "user":  self.user.serialize(),
-            "people": self.people.serialize_populate() if self.people else None
+            "people": self.people.serialize() 
         }
     
     def serialize_planet(self):
@@ -29,7 +29,7 @@ class Favorite(db.Model):
             "user_id": self.user_id,
             "planet_id": self.planet_id, 
             "user":  self.user.serialize(),
-            "planet": self.planet.serialize_populate() if self.planet else None
+            "planet": self.planet.serialize() 
         }
     
     def serialize_populate(self):
