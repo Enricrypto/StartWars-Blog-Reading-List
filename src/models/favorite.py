@@ -20,7 +20,7 @@ class Favorite(db.Model):
             "user_id": self.user_id,
             "people_id": self.people_id, 
             "user":  self.user.serialize(),
-            "people": list(map(lambda people: people.serialize_populate(), self.people))
+            "people": self.people.serialize_populate() if self.people else None
         }
     
     def serialize_planet(self):

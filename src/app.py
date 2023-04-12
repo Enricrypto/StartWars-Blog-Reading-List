@@ -46,7 +46,6 @@ people = people_route(app)
 favorite = favorite_route(app)
 
 
-
 # @app.route('/people/<int:id>', methods=['DELETE'])
 # def delete_people(id):
 #     del_people = People.query.get(id)

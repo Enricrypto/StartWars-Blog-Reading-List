@@ -8,7 +8,6 @@ def favorite_route(app):
     def create_favorite(category):
         # bring all variables at once
         body = request.get_json() 
-        print("HERE IS THE BODY", body)
         if category == 'planet':
             new_favorite = Favorite (None, body['planet_id'], body['user_id'])
             db.session.add(new_favorite)

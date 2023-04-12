@@ -12,8 +12,9 @@ def create_user(data):
 def get_all_users(): 
     users = User.query.all()
     serialize_all_users = list(map(lambda user: user.serialize(), users))
+    # serialize_all_users = [user.serialize() for user in users] ==> This is the same as above, an array comprehension
     return serialize_all_users
 
-def get_user_by_id(user_id):
-    user = User.query.get(user_id)
+def get_user_by_id(id):
+    user = User.query.get(id)
     return user.serialize()
