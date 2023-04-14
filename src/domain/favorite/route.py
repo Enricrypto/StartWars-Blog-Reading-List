@@ -15,7 +15,12 @@ def favorite_route(app):
     def get_all_favorites():
         return Controller.get_all_favorites()
 
-    @app.route('/favorite/<string:category>/<int:id>', methods=['DELETE'])
-    def delete_favorite(category, id): 
-        return Controller.delete_favorite(category, id)
+    @app.route('/favorite/<int:id>', methods=['DELETE'])
+    def delete_favorite(id): 
+        return Controller.delete_favorite(id)
+
+    @app.route('/favorite/<int:id_user>', methods=['DELETE'])
+    def delete_all_favorites(user_id):
+        resultado = Controller.delete_all_favorites(user_id)
+        return resultado
 

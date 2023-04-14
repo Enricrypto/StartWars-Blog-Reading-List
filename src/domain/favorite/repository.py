@@ -20,7 +20,7 @@ def get_all_favorites():
         # se llama a la funcion que serializa todo excepto el otro mapeo
         return fav_serialized
 
-def delete_favorite_people(id):
+def delete_favorite(id):
     favorite = Favorite.query.get(id)
     if favorite is None:
         return favorite
@@ -29,11 +29,9 @@ def delete_favorite_people(id):
         db.session.commit()
     return favorite
 
-def delete_favorite_planet(id):
-    favorite = Favorite.query.get(id)
-    if favorite is None:
-        return favorite
-    else:
-        db.session.delete(favorite)
-        db.session.commit()
-    return favorite
+def delete_all_favorites(user_id):
+    favorites = Favorite.query.filter_by(user_id=user_id).first()
+    db.session.delete(favorites)
+    db.session.commit()
+    return favorites
+
