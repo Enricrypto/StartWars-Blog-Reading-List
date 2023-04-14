@@ -1,5 +1,5 @@
-from flask import request, jsonify
 import domain.favorite.repository as Repository
+import handle_response as Response
 
 def create_favorite(category, body):
     if category == 'planet':
@@ -17,8 +17,8 @@ def delete_favorite(category, id):
         favorite_planet = Repository.delete_favorite_planet(id)
         return favorite_planet
 
-def get_fav():
+def get_all_favorites():
     #se pasa la funcion por aqui por si se quieren meter validaciones
-    resultado = Repository.get_fav()
+    resultado = Repository.get_all_favorites()
     return Response.response_ok(resultado) #se utiliza la variable resultado para pasarla a response y que devuelva un msg
 

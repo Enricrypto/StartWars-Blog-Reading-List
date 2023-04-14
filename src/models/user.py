@@ -14,7 +14,6 @@ class User(db.Model):
         self.password = password
         self.is_active = True
 
-
     def serialize(self):
         return {
             "id": self.id,

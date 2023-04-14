@@ -19,8 +19,6 @@ class Favorite(db.Model):
             "id": self.id, 
             "user_id": self.user_id,
             "people_id": self.people_id, 
-            "user":  self.user.serialize(),
-            "people": self.people.serialize() 
         }
     
     def serialize_planet(self):
@@ -28,12 +26,12 @@ class Favorite(db.Model):
             "id": self.id, 
             "user_id": self.user_id,
             "planet_id": self.planet_id, 
-            # "user":  self.user.serialize(),
-            # "planet": self.planet.serialize() 
         }
     
     def serialize_populate(self):
         return {
             "id": self.id,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "people_id": self.people_id, 
+            "planet_id": self.planet_id, 
         }

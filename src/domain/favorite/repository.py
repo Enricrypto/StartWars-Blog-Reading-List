@@ -7,7 +7,6 @@ def create_favorite_people(body):
     print(new_favorite)
     return new_favorite
 
-
 def create_favorite_planet(body):
     new_favorite = Favorite (None, body['planet_id'], body['user_id'])
     db.session.add(new_favorite)
@@ -15,6 +14,11 @@ def create_favorite_planet(body):
     print(new_favorite)
     return new_favorite
 
+def get_all_favorites():
+        favorites = Favorite.query.all()
+        fav_serialized = list(map(lambda fav: fav.serialize_populate(), favorites)) 
+        # se llama a la funcion que serializa todo excepto el otro mapeo
+        return fav_serialized
 
 def delete_favorite_people(id):
     favorite = Favorite.query.get(id)
