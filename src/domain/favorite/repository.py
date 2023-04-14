@@ -14,3 +14,22 @@ def create_favorite_planet(body):
     db.session.commit()
     print(new_favorite)
     return new_favorite
+
+
+def delete_favorite_people(id):
+    favorite = Favorite.query.get(id)
+    if favorite is None:
+        return favorite
+    else:
+        db.session.delete(favorite)
+        db.session.commit()
+    return favorite
+
+def delete_favorite_planet(id):
+    favorite = Favorite.query.get(id)
+    if favorite is None:
+        return favorite
+    else:
+        db.session.delete(favorite)
+        db.session.commit()
+    return favorite

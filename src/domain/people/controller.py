@@ -24,3 +24,12 @@ def get_people_by_id(people_id):
         return Response.response_error( 'people not found', 404)
 
     return people, 201
+
+def delete_people(id):
+    if not isinstance(id, int):
+        return Response.response_error("Id is not a number", 404)
+    people = Repository.delete_people(id) 
+    if people is not None:
+        return Response.response_ok("People deleted") 
+    else:
+        return Response.response_error("Id not found", 404)

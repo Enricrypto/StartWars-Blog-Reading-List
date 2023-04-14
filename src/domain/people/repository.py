@@ -11,6 +11,15 @@ def create_people(data):
     db.session.commit()
     return new_people.serialize()
 
-def get_people_by_id(people_id):
-    people = People.query.get(people_id)
+def get_people_by_id(id):
+    people = People.query.get(id)
     return people.serialize()
+
+def delete_people(id):
+    people = People.query.get(id)
+    if people is None:  
+        return people  
+    else:
+        db.session.delete(people)
+        db.session.commit()
+    return people

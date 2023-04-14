@@ -16,3 +16,7 @@ def people_route(app):
     @app.route('/people/<int:id>', methods=['GET'])
     def get_people_by_id(id):
         return Controller.get_people_by_id(id)
+
+    @app.route('/people/<int:id>', methods=['DELETE'])
+    def delete_people(id):
+        return Controller.delete_people(id)

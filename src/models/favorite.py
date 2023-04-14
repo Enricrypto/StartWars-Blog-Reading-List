@@ -28,8 +28,8 @@ class Favorite(db.Model):
             "id": self.id, 
             "user_id": self.user_id,
             "planet_id": self.planet_id, 
-            "user":  self.user.serialize(),
-            "planet": self.planet.serialize() 
+            # "user":  self.user.serialize(),
+            # "planet": self.planet.serialize() 
         }
     
     def serialize_populate(self):

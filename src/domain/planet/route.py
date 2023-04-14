@@ -1,5 +1,4 @@
 from flask import request, jsonify
-from models.index import db, Planet
 import domain.planet.controller as Controller 
 
 def planet_route(app):
@@ -17,3 +16,6 @@ def planet_route(app):
     def get_planet_by_id(id):
         return Controller.get_planet_by_id(id)
         
+    @app.route('/planet/<int:id>', methods=['DELETE'])
+    def delete_planet(id):
+        return Controller.delete_planet(id)

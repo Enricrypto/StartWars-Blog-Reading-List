@@ -16,10 +16,11 @@ def get_planet_by_id(planet_id):
     return planet.serialize()
 
 
-
-# @app.route('/planet/<int:id>', methods=['DELETE'])
-# def delete_planet(id):
-#     del_planet = People.query.get(id)
-#     db.session.delete(del_planet)
-#     db.session.commit()
-#     return jsonify(del_planet.serialize()), 200
+def delete_planet(id):
+    planet = Planet.query.get(id)
+    if planet is None:  
+        return planet  
+    else:
+        db.session.delete(planet)
+        db.session.commit()
+    return planet

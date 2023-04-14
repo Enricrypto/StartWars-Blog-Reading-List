@@ -24,3 +24,12 @@ def get_planet_by_id(planet_id):
         return Response.response_error( 'planet not found', 404)
 
     return planet, 201
+
+def delete_planet(id):
+    if not isinstance(id, int):
+        return Response.response_error("Id is not a number", 404)
+    planet = Repository.delete_planet(id)
+    if planet is not None:
+        return Response.response_ok("Planet deleted")
+    else: 
+        return Response.response_error("Id not found", 404)

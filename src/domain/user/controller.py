@@ -23,3 +23,12 @@ def get_user_by_id(user_id):
         return Response.response_error('user not found', 404)
     
     return user
+
+def delete_user(id):
+    if not isinstance(id, int):
+        return Response.response_error("Id is not a number", 404)
+    user = Repository.delete_user(id) #usando como param el id 
+    if user is not None:
+        return Response.response_ok("User deleted") #se utiliza la variable resultado para pasarla a response y que devuelva un msg  
+    else:
+        return Response.response_error("Id not found", 404)
